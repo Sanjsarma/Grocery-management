@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <style> 
+    table, td, th { 
+     border: 1px solid #ddd; 
+     text-align: left; 
+    } 
+    table { 
+     border-collapse: collapse; 
+     width: 50%; 
+    } 
+    .table-data{ 
+     position: relative; 
+     left:150px; 
+     top:100px; 
+    } 
+    th, td { 
+     padding: 15px; 
+    } 
+    </style>
+</head>
+
+<body>
+    <div class="table-data">
+        <h2>Items</h2>
+            <table border="1">
+                <tr>
+                    <th>Sl.no</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+                
+                <%
+                if(productData.length!=0){
+                var i=1;
+                productData.forEach(function(data){
+                %>
+                <tr>
+                    <td><%=i %></td>
+                    <td><%=data.i_name %></td>
+                    <td><%=data.price %></td>
+                    <td><%=data.quantity %></td>
+                    <td><form action="update" method="POST" value="/voews/update/<%=data.id%>"></form>
+                        <button type="submit">Edit</button></td>
+                    <td><a href="/views/delete/<%=data.id%>">Delete</a></td>
+                </tr>
+                <%  i++; }) %>
+                <% } else{ %>
+                    <tr>
+                        <td colspan="7">No Data Found</td>
+                    </tr>
+                <% } %>
+            </table>
+            </div>
+        </body>
+        </html>    
+
+</body>
