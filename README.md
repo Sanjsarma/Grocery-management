@@ -1,1 +1,1 @@
-# mini
+# Grocery management system
