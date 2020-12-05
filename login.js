@@ -133,6 +133,15 @@ app.post('/display',(req,res)=>{
     });   
 });
 
+app.get('/display',(req,res)=>{
+    var sql='SELECT * FROM items';
+    conn.query(sql,(error,data)=>{
+        if(error) throw error;
+        res.render('display',{title: 'Product list',productData:data});
+
+    });
+});
+
 /*app.post('/update/:id',(req,res)=>{
    var sql='UPDATE items SET ? WHERE i_id='+req.params.id+';';
    var updateItem=[req.body.itemname,req.body.price,req.body.quantity];
@@ -142,6 +151,33 @@ app.post('/display',(req,res)=>{
    });
 
 });*/
-  
+
+app.post('/update/(:id)',(req,res)=>{
+    if(req.params.id)
+    {res.render('update');
+    var sql='UPDATE items SET i_name=?, price=?, quantity=? WHERE i_no='+req.params.id+';';
+    var updateItem=[req.body.itemname,req.body.price,req.body.quantity];
+    conn.query(sql,updateItem,(error,data)=>{
+    //if(error) throw error ;
+    if(error)
+        console.log(error);
+    else{
+        console.log("Updated successfully");}
+    //    res.end();
+    //res.end("<h1>Successfully updated<h1><script> setTimeout(function() { window.location.href = \"http://localhost:5000/display\";}, 500); </script>")
+    //res.redirect('/display');
+    }); }
+});
+
+app.get('/delete/:id', function(req, res, next) {
+    var id= req.params.id;
+      var sql = 'UPDATE items SET status="n" WHERE i_no = ?';
+      conn.query(sql, [id], function (err, data) {
+      if (err) throw err;
+      console.log(data.affectedRows + " record(s) updated");
+    });
+    res.redirect('/display');
+    
+  });
 
 app.listen(5000);
