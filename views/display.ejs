@@ -39,17 +39,19 @@
                 if(productData.length!=0){
                 var i=1;
                 productData.forEach(function(data){
+                if(data.status=='y'){
                 %>
                 <tr>
                     <td><%=i %></td>
                     <td><%=data.i_name %></td>
                     <td><%=data.price %></td>
                     <td><%=data.quantity %></td>
-                    <td><form action="update" method="POST" value="/voews/update/<%=data.id%>"></form>
-                        <button type="submit">Edit</button></td>
-                    <td><a href="/views/delete/<%=data.id%>">Delete</a></td>
+                    <form action="/update/<%=i%>" method="POST">
+                    <td><button type="submit">Edit</button></td>
+                    </form>
+                    <td><a href="/delete/<%=i%>">Delete</a></td>
                 </tr>
-                <%  i++; }) %>
+                <%  i++; } }) %>
                 <% } else{ %>
                     <tr>
                         <td colspan="7">No Data Found</td>
