@@ -46,9 +46,7 @@
                     <td><%=data.i_name %></td>
                     <td><%=data.price %></td>
                     <td><%=data.quantity %></td>
-                    <form action="/update/<%=i%>" method="POST">
-                    <td><button type="submit">Edit</button></td>
-                    </form>
+                    <td><a href="/update/<%=i%>">Edit</button></td>
                     <td><a href="/delete/<%=i%>">Delete</a></td>
                 </tr>
                 <%  i++; } }) %>
