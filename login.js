@@ -141,30 +141,34 @@ app.get('/display',(req,res)=>{
 
     });
 });
-
-app.post('/update/:id',(req,res)=>{
-   var sql='UPDATE items SET ? WHERE i_no='+req.query.id+';';
+/*
+app.post('/updated',(req,res)=>{
+   var sql='UPDATE items SET ? WHERE i_no='+req.body.id+';';
    var updateItem=[req.body.itemname,req.body.price,req.body.quantity];
    conn.query(sql,updateItem,(error,data)=>{
    if(error) throw error;
    res.redirect('/display');
 });
 
-});
+});*/
 
 app.get('/update/:id',(req,res)=>{
-    var sql='SELECT * FROM items WHERE i_no='+req.params.id+';';
-   /* var sql='UPDATE items SET i_name=?, price=?, quantity=? WHERE i_no='+req.params.id+';';
-    var updateItem=[req.body.itemname,req.body.price,req.body.quantity];*/
-    conn.query(sql,(error,data)=>{
+   // var sql='SELECT * FROM items WHERE i_no='+req.params.id+';'
+   res.render('update');
+});
+app.post('/update/updated',(req,res)=>{
+   var sql='UPDATE items SET i_name=?, price=?, quantity=?, status="y" WHERE i_no='+req.body.id+';'
+    var updateItem=[req.body.itemname,req.body.price,req.body.quantity];
+    conn.query(sql,updateItem,(error,data)=>{
     if(error) throw error ;
-    res.render('update',{title : 'Product list',data});
+    console.log("Updated");
     /*else{
         console.log("Updated successfully");}
     //    res.end();
     //res.end("<h1>Successfully updated<h1><script> setTimeout(function() { window.location.href = \"http://localhost:5000/display\";}, 500); </script>")
     //res.redirect('/display');*/
-    });
+    res.redirect('/display');
+   });
 });
 
 app.get('/delete/:id', (req, res, next)=> {
@@ -176,5 +180,7 @@ app.get('/delete/:id', (req, res, next)=> {
     });    res.redirect('/display');
     
   });
+
+
 
 app.listen(5000);

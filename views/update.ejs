@@ -6,16 +6,35 @@
 <body>
 
 <div class="data-form" >
-    <form method="POST" action="update/:id">
-      <h2>Edit user:</h2>
-      <label for="inputName">Name</label>
-      <input type="text" name="itemname" id="inputName" placeholder="Name" required>
-      <label for="inputPrice">Price</label>
-      <input type="text" name="price" id="inputLastName" placeholder="Price" required>
-      <label for="inputQuantity">Quantity</label>
-      <input type="text" name="quantity" id="inputPassword" placeholder="Quantity" required>
+    <form action="update/:id" method="POST">
+      <h2>Edit records:</h2>
+    </form>
+    <form action="updated" method="POST">
+      <input type="text" name="id" placeholder="Sl.no" required>
+      <input type="text" name="itemname" placeholder="Name" required>
+      <input type="text" name="price" placeholder="Price" required>
+      <input type="text" name="quantity" placeholder="Quantity" required>
       <button type="submit">Submit</button>
-     </form>
+    </form>
+
+    <ul style="color:white; float: right;" class="nav navbar-nav">
+      <li><a href="/display">Display   </a> </li>
+      <li><a href="#">Sign Up </a>  </li>
+
+  </ul>
+   <!-- <form action="updated" method="POST">
+      <input type="text" name="id" placeholder="Sl.no" required>
+      <input type="text" name="itemname" placeholder="Name" required>
+      <input type="text" name="price" placeholder="Price" required>
+      <input type="text" name="quantity" placeholder="Quantity" required>
+      <button type="submit">Submit</button>
+    </form>  -->
     </div>
 </body>
 </html>
+
+<!--
+id="inputName"
+inputPrice
+inputQuantity
+-->
