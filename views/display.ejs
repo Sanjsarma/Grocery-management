@@ -42,12 +42,12 @@
                 if(data.status=='y'){
                 %>
                 <tr>
-                    <td><%=i %></td>
+                    <td><%=i%></td>
                     <td><%=data.i_name %></td>
                     <td><%=data.price %></td>
                     <td><%=data.quantity %></td>
-                    <td><a href="/update/<%=i%>">Edit</button></td>
-                    <td><a href="/delete/<%=i%>">Delete</a></td>
+                    <td><a href="/update/<%=data.i_no%>">Edit</button></td>
+                    <td><a href="/delete/<%=data.i_no%>">Delete</a></td>
                 </tr>
                 <%  i++; } }) %>
                 <% } else{ %>
