@@ -3,6 +3,8 @@ const express=require('express');
 const session=require('express-session');
 const bodyParser=require('body-parser');
 const path=require('path');
+const fileUpload = require('express-fileupload');
+
 //const router=express.Router();
  
 //const { createConnection } = require('net');
@@ -17,6 +19,7 @@ const conn=mysql.createConnection({
 
 const app=express();
 app.set('view engine','ejs');
+app.use(fileUpload());
 
 app.use(express.static('public'));
 app.use(session({
@@ -115,14 +118,52 @@ app.get('/admin',(req,res)=>{
     res.sendFile(path.join(__dirname+ '/public/admin.html'));
 });
 
+app.get('/insert',(req,res)=>{
+    message = ''
+    res.render('insert',{message:message});
+});
+
 app.post('/insert',(req,res)=>{
-    var sql = 'INSERT INTO items (i_name, price, quantity) VALUES (?,?,?)';
+  /*  var sql = 'INSERT INTO items (i_name, price, quantity) VALUES (?,?,?)';
     var newItem=[req.body.itemname,req.body.price,req.body.quantity];
     conn.query(sql, newItem, function (error,data) {
        if (error) throw error;
             console.log("Item inserted");
         });
-    res.redirect('/admin');
+    res.redirect('/admin'); */
+    message = '';
+   
+      var post  = req.body;
+      var name= post.user_name;
+      var pass= post.password;
+      var fname= post.first_name;
+      var lname= post.last_name;
+      var mob= post.mob_no;
+ 
+	  if (!req.files){
+            console.log("Error");
+            }
+		var file = req.files.uploaded_image;
+		var img_name=file.name;
+ 
+	  	 if(file.mimetype == "image/jpeg" ||file.mimetype == "image/png"||file.mimetype == "image/gif" || file.mimetype=="image/webp"){
+                                 
+              file.mv('public/images/upload_images/'+file.name, function(err) {
+                             
+	              if (err)
+ 
+	                return res.status(500).send(err);
+      					var sql = "INSERT INTO users_image(first_name,last_name,mob_no,user_name, password ,image) VALUES ('" + fname + "','" + lname + "','" + mob + "','" + name + "','" + pass + "','" + img_name + "')";
+ 
+    						var query = conn.query(sql, function(err, result) {
+    							 res.redirect('/display');
+    						});
+					   });
+          } else {
+            message = "This format is not allowed , please upload file with '.png','.gif','.jpg'";
+            res.render('insert.ejs',{message: message});
+          }
+    
 });
 app.post('/display',(req,res)=>{ 
     var sql='SELECT * FROM items';
