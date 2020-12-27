@@ -61,7 +61,7 @@ app.post('/auth',(req,res)=>{
 });
 var Users=[];
 app.get('/signmeup',(req,res)=>{
-    res.sendFile(path.join(__dirname + 'public/signup.html'));
+    res.sendFile(path.join(__dirname + '/public/signup.html'));
 })
 
 
