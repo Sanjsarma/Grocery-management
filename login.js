@@ -4,7 +4,6 @@ const session=require('express-session');
 const bodyParser=require('body-parser');
 const path=require('path');
 const fileUpload = require('express-fileupload');
-
 //const router=express.Router();
  
 //const { createConnection } = require('net');
@@ -61,7 +60,7 @@ app.post('/auth',(req,res)=>{
 });
 var Users=[];
 app.get('/signmeup',(req,res)=>{
-    res.sendFile(path.join(__dirname + 'public/signup.html'));
+    res.sendFile(path.join(__dirname + '/public/signup.html'));
 })
 
 
@@ -115,12 +114,18 @@ app.get('/buyer', (req,res)=>{
 });
 
 app.get('/admin',(req,res)=>{
-    res.sendFile(path.join(__dirname+ '/public/admin.html'));
+    var sql='SELECT * FROM items';
+    conn.query(sql,(error,data)=>{
+        if(error) throw error;
+        res.render('admin', {title: 'Product list',productData:data});
+
+    });   
+    //res.sendFile(path.join(__dirname+ '/public/admin.html'));
 });
 
 app.get('/insert',(req,res)=>{
     message = ''
-    res.render('insert',{message:message});
+    res.render('additem',{message:message});
 });
 
 app.post('/insert',(req,res)=>{
@@ -134,11 +139,9 @@ app.post('/insert',(req,res)=>{
     message = '';
    
       var post  = req.body;
-      var name= post.user_name;
-      var pass= post.password;
-      var fname= post.first_name;
-      var lname= post.last_name;
-      var mob= post.mob_no;
+      var name= post.itemname;
+      var price= post.price;
+      var quantity= post.quantity;
  
 	  if (!req.files){
             console.log("Error");
@@ -149,21 +152,18 @@ app.post('/insert',(req,res)=>{
 	  	 if(file.mimetype == "image/jpeg" ||file.mimetype == "image/png"||file.mimetype == "image/gif" || file.mimetype=="image/webp"){
                                  
               file.mv('public/images/upload_images/'+file.name, function(err) {
-                             
-	              if (err)
- 
+               if (err)
 	                return res.status(500).send(err);
-      					var sql = "INSERT INTO users_image(first_name,last_name,mob_no,user_name, password ,image) VALUES ('" + fname + "','" + lname + "','" + mob + "','" + name + "','" + pass + "','" + img_name + "')";
- 
-    						var query = conn.query(sql, function(err, result) {
-    							 res.redirect('/display');
-    						});
-					   });
+      			var sql = "INSERT INTO items(i_name,price,quantity,image) VALUES (?,?,?,?)";
+                var newItem=[name,price,quantity,img_name];
+    			conn.query(sql, newItem,function(err, result) {
+    				 res.redirect('/display');
+    				});
+				});
           } else {
             message = "This format is not allowed , please upload file with '.png','.gif','.jpg'";
-            res.render('insert.ejs',{message: message});
+            res.render('additem.ejs',{message: message});
           }
-    
 });
 app.post('/display',(req,res)=>{ 
     var sql='SELECT * FROM items';
@@ -182,19 +182,9 @@ app.get('/display',(req,res)=>{
 
     });
 });
-/*
-app.post('/updated',(req,res)=>{
-   var sql='UPDATE items SET ? WHERE i_no='+req.body.id+';';
-   var updateItem=[req.body.itemname,req.body.price,req.body.quantity];
-   conn.query(sql,updateItem,(error,data)=>{
-   if(error) throw error;
-   res.redirect('/display');
-});
-
-});*/
 
 app.get('/update/:id',(req,res)=>{
-   // var sql='SELECT * FROM items WHERE i_no='+req.params.id+';'
+   //var sql='SELECT * FROM items WHERE i_no='+req.params.id+';'
    res.render('update');
 });
 app.post('/update/updated',(req,res)=>{
@@ -210,6 +200,52 @@ app.post('/update/updated',(req,res)=>{
     //res.redirect('/display');*/
     res.redirect('/display');
    });
+});
+
+app.get('/addoffer/:id',(req,res)=>{
+    var sql='UPDATE items SET offer="y" WHERE i_no='+req.params.id+';';
+   conn.query(sql,(error,data)=>{
+       if(error) throw error;
+   });
+   res.render('addoffer');
+});
+
+app.post('/addoffer/addoffer',(req,res)=>{
+    var sql='UPDATE items SET price=? WHERE i_no='+req.body.id+';'
+    var updateItem=[req.body.price];
+    conn.query(sql,updateItem,(error,data)=>{
+    if(error) throw error ;
+    console.log("Offer applied");
+    res.redirect('/display');
+})
+});
+
+app.get('/offers',(req,res)=>{
+    var sql='SELECT * from items';
+    conn.query(sql,(err,data)=>{
+        if(err) throw err;
+        res.render('offers',{title: 'Offers page', productData:data});
+    });
+});
+
+app.get('/alertcustomer',(req,res)=>{
+    res.render('alertcustomer');
+});
+
+app.post('/alertcustomer',(req,res)=>{
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+    const client = require('twilio')(accountSid, authToken);
+    var messagebody=req.body.message;
+    var phone=req.body.phonenumber;
+    client.messages
+      .create({
+         body: messagebody,
+         from: '+12513049459',
+         to: process.env.MY_PHONE_NUMBER
+       })
+      .then(message => console.log(message.sid));
+    res.send("Message sent");
 });
 
 app.get('/delete/:id', (req, res, next)=> {
