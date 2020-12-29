@@ -4,10 +4,9 @@ const session=require('express-session');
 const bodyParser=require('body-parser');
 const path=require('path');
 const fileUpload = require('express-fileupload');
+const twilio=require('twilio');
+//const nexmo=require('nexmo');
 //const router=express.Router();
- 
-//const { createConnection } = require('net');
-//const { Server } = require('http');
 
 const conn=mysql.createConnection({
     host:'localhost',
@@ -37,7 +36,7 @@ app.post('/auth',(req,res)=>{
     var username=req.body.username;
     var password=req.body.password;
     if(username && password){
-        conn.query('SELECT * FROM accounts WHERE username= ? AND password= ?', [username,password], (error,results,fields)=>{
+        conn.query('SELECT * FROM accounts WHERE username= ? AND password= ?',[username,password], (error,results,fields)=>{
          if(results.length>0 && username=="test"){
              req.session.loggedin = true;
              req.session.username=username;
@@ -80,17 +79,9 @@ app.post('/signup',(req,res)=>{
     conn.query(sql,newUser, (error,results,fields)=>{
         if(error){
             return res.status(400);
-            //res.send("Error");
-            //console.log(error);
         }
         else{
             return res.redirect('/home'); 
-            //res.status(200).json({
-                //status: 'success'
-            //});
-            console.log("Success");
-            res.send("Successfully signed up");
-            res.redirect('/home');
         }
     });
     
@@ -149,9 +140,9 @@ app.post('/insert',(req,res)=>{
 		var file = req.files.uploaded_image;
 		var img_name=file.name;
  
-	  	 if(file.mimetype == "image/jpeg" ||file.mimetype == "image/png"||file.mimetype == "image/gif" || file.mimetype=="image/webp"){
+	  	 if(file.mimetype == "image/jpeg" || file.mimetype=="image/jpg" || file.mimetype == "image/png"||file.mimetype == "image/gif" || file.mimetype=="image/webp"){
                                  
-              file.mv('public/images/upload_images/'+file.name, function(err) {
+              file.mv('public/images/'+file.name, function(err) {
                if (err)
 	                return res.status(500).send(err);
       			var sql = "INSERT INTO items(i_name,price,quantity,image) VALUES (?,?,?,?)";
@@ -227,25 +218,22 @@ app.get('/offers',(req,res)=>{
         res.render('offers',{title: 'Offers page', productData:data});
     });
 });
-
+/*
 app.get('/alertcustomer',(req,res)=>{
     res.render('alertcustomer');
-});
+});*/
 
 app.post('/alertcustomer',(req,res)=>{
-    const accountSid = process.env.TWILIO_ACCOUNT_SID;
-    const authToken = process.env.TWILIO_AUTH_TOKEN;
-    const client = require('twilio')(accountSid, authToken);
-    var messagebody=req.body.message;
-    var phone=req.body.phonenumber;
+    const accountSid = "";
+    const authToken = '';
+    const client = twilio(accountSid, authToken);
     client.messages
       .create({
-         body: messagebody,
-         from: '+12513049459',
-         to: process.env.MY_PHONE_NUMBER
-       })
-      .then(message => console.log(message.sid));
-    res.send("Message sent");
+         body: "25% offer!",
+         from: '',
+         to: ''
+       }).then(message => console.log(message.sid));
+       res.redirect('/display');
 });
 
 app.get('/delete/:id', (req, res, next)=> {
