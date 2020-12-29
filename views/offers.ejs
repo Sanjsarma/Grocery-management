@@ -49,7 +49,9 @@
                     <td><%=data.i_name %></td>
                     <td><%=data.price %></td>
                     <td><%=data.quantity %></td>
-                    <td><a href="/alertcustomer">Add offer</a></td>
+                    <form action="/alertcustomer" method="POST">
+                    <td><button type="submit">Alert</button></td>
+                    </form>
                 </tr>
                 <%  i++; } }) %>
                 <% } else{ %>
