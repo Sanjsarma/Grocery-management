@@ -4,11 +4,9 @@ const session=require('express-session');
 const bodyParser=require('body-parser');
 const path=require('path');
 const fileUpload = require('express-fileupload');
-
+const twilio=require('twilio');
+//const nexmo=require('nexmo');
 //const router=express.Router();
- 
-//const { createConnection } = require('net');
-//const { Server } = require('http');
 
 const conn=mysql.createConnection({
     host:'localhost',
@@ -38,7 +36,7 @@ app.post('/auth',(req,res)=>{
     var username=req.body.username;
     var password=req.body.password;
     if(username && password){
-        conn.query('SELECT * FROM accounts WHERE username= ? AND password= ?', [username,password], (error,results,fields)=>{
+        conn.query('SELECT * FROM accounts WHERE username= ? AND password= ?',[username,password], (error,results,fields)=>{
          if(results.length>0 && username=="test"){
              req.session.loggedin = true;
              req.session.username=username;
@@ -81,17 +79,9 @@ app.post('/signup',(req,res)=>{
     conn.query(sql,newUser, (error,results,fields)=>{
         if(error){
             return res.status(400);
-            //res.send("Error");
-            //console.log(error);
         }
         else{
             return res.redirect('/home'); 
-            //res.status(200).json({
-                //status: 'success'
-            //});
-            console.log("Success");
-            res.send("Successfully signed up");
-            res.redirect('/home');
         }
     });
     
@@ -115,12 +105,18 @@ app.get('/buyer', (req,res)=>{
 });
 
 app.get('/admin',(req,res)=>{
-    res.sendFile(path.join(__dirname+ '/public/admin.html'));
+    var sql='SELECT * FROM items';
+    conn.query(sql,(error,data)=>{
+        if(error) throw error;
+        res.render('admin', {title: 'Product list',productData:data});
+
+    });   
+    //res.sendFile(path.join(__dirname+ '/public/admin.html'));
 });
 
 app.get('/insert',(req,res)=>{
     message = ''
-    res.render('insert',{message:message});
+    res.render('additem',{message:message});
 });
 
 app.post('/insert',(req,res)=>{
@@ -134,11 +130,9 @@ app.post('/insert',(req,res)=>{
     message = '';
    
       var post  = req.body;
-      var name= post.user_name;
-      var pass= post.password;
-      var fname= post.first_name;
-      var lname= post.last_name;
-      var mob= post.mob_no;
+      var name= post.itemname;
+      var price= post.price;
+      var quantity= post.quantity;
  
 	  if (!req.files){
             console.log("Error");
@@ -146,24 +140,21 @@ app.post('/insert',(req,res)=>{
 		var file = req.files.uploaded_image;
 		var img_name=file.name;
  
-	  	 if(file.mimetype == "image/jpeg" ||file.mimetype == "image/png"||file.mimetype == "image/gif" || file.mimetype=="image/webp"){
+	  	 if(file.mimetype == "image/jpeg" || file.mimetype=="image/jpg" || file.mimetype == "image/png"||file.mimetype == "image/gif" || file.mimetype=="image/webp"){
                                  
-              file.mv('public/images/upload_images/'+file.name, function(err) {
-                             
-	              if (err)
- 
+              file.mv('public/images/'+file.name, function(err) {
+               if (err)
 	                return res.status(500).send(err);
-      					var sql = "INSERT INTO users_image(first_name,last_name,mob_no,user_name, password ,image) VALUES ('" + fname + "','" + lname + "','" + mob + "','" + name + "','" + pass + "','" + img_name + "')";
- 
-    						var query = conn.query(sql, function(err, result) {
-    							 res.redirect('/display');
-    						});
-					   });
+      			var sql = "INSERT INTO items(i_name,price,quantity,image) VALUES (?,?,?,?)";
+                var newItem=[name,price,quantity,img_name];
+    			conn.query(sql, newItem,function(err, result) {
+    				 res.redirect('/display');
+    				});
+				});
           } else {
             message = "This format is not allowed , please upload file with '.png','.gif','.jpg'";
-            res.render('insert.ejs',{message: message});
+            res.render('additem.ejs',{message: message});
           }
-    
 });
 app.post('/display',(req,res)=>{ 
     var sql='SELECT * FROM items';
@@ -182,19 +173,9 @@ app.get('/display',(req,res)=>{
 
     });
 });
-/*
-app.post('/updated',(req,res)=>{
-   var sql='UPDATE items SET ? WHERE i_no='+req.body.id+';';
-   var updateItem=[req.body.itemname,req.body.price,req.body.quantity];
-   conn.query(sql,updateItem,(error,data)=>{
-   if(error) throw error;
-   res.redirect('/display');
-});
-
-});*/
 
 app.get('/update/:id',(req,res)=>{
-   // var sql='SELECT * FROM items WHERE i_no='+req.params.id+';'
+   //var sql='SELECT * FROM items WHERE i_no='+req.params.id+';'
    res.render('update');
 });
 app.post('/update/updated',(req,res)=>{
@@ -210,6 +191,49 @@ app.post('/update/updated',(req,res)=>{
     //res.redirect('/display');*/
     res.redirect('/display');
    });
+});
+
+app.get('/addoffer/:id',(req,res)=>{
+    var sql='UPDATE items SET offer="y" WHERE i_no='+req.params.id+';';
+   conn.query(sql,(error,data)=>{
+       if(error) throw error;
+   });
+   res.render('addoffer');
+});
+
+app.post('/addoffer/addoffer',(req,res)=>{
+    var sql='UPDATE items SET price=? WHERE i_no='+req.body.id+';'
+    var updateItem=[req.body.price];
+    conn.query(sql,updateItem,(error,data)=>{
+    if(error) throw error ;
+    console.log("Offer applied");
+    res.redirect('/display');
+})
+});
+
+app.get('/offers',(req,res)=>{
+    var sql='SELECT * from items';
+    conn.query(sql,(err,data)=>{
+        if(err) throw err;
+        res.render('offers',{title: 'Offers page', productData:data});
+    });
+});
+/*
+app.get('/alertcustomer',(req,res)=>{
+    res.render('alertcustomer');
+});*/
+
+app.post('/alertcustomer',(req,res)=>{
+    const accountSid = "";
+    const authToken = '';
+    const client = twilio(accountSid, authToken);
+    client.messages
+      .create({
+         body: "25% offer!",
+         from: '',
+         to: ''
+       }).then(message => console.log(message.sid));
+       res.redirect('/display');
 });
 
 app.get('/delete/:id', (req, res, next)=> {

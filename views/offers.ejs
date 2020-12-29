@@ -35,9 +35,7 @@
                     <th>Name</th>
                     <th>Price</th>
                     <th>Quantity</th>
-                    <th>Offer</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th>Alert customers</th>
                 </tr>
                 
                 <%
@@ -51,9 +49,9 @@
                     <td><%=data.i_name %></td>
                     <td><%=data.price %></td>
                     <td><%=data.quantity %></td>
-                    <td><a href="/addoffer/<%=data.i_no%>">Add offer</a></td>
-                    <td><a href="/update/<%=data.i_no%>">Edit</button></td>
-                    <td><a href="/delete/<%=data.i_no%>">Delete</a></td>
+                    <form action="/alertcustomer" method="POST">
+                    <td><button type="submit">Alert</button></td>
+                    </form>
                 </tr>
                 <%  i++; } }) %>
                 <% } else{ %>
