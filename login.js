@@ -224,7 +224,7 @@ app.get('/alertcustomer',(req,res)=>{
 });*/
 
 app.post('/alertcustomer',(req,res)=>{
-    const accountSid = "";
+    const accountSid = '';
     const authToken = '';
     const client = twilio(accountSid, authToken);
     client.messages
