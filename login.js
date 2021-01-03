@@ -11,7 +11,7 @@ const twilio=require('twilio');
 const conn=mysql.createConnection({
     host:'localhost',
     user: 'root',
-    password: 'sanjana123',
+    password: 'paper',
     database: 'Ecommercedb'
 });
 
