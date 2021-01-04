@@ -5,13 +5,17 @@ const bodyParser=require('body-parser');
 const path=require('path');
 const fileUpload = require('express-fileupload');
 const twilio=require('twilio');
+const bcrypt = require('bcryptjs');
+const passport = require('passport');
+const flash=require('connect-flash');
+var Strategy = require('passport-local').Strategy;
 //const nexmo=require('nexmo');
 //const router=express.Router();
 
 const conn=mysql.createConnection({
     host:'localhost',
     user: 'root',
-    password: 'paper',
+    password: 'sanjana123',
     database: 'Ecommercedb'
 });
 
@@ -22,16 +26,166 @@ app.use(fileUpload());
 app.use(express.static('public'));
 app.use(session({
     secret:'secret',
-    resave: true,
-    saveUninitialized: true
-}));
+    resave: false,
+    saveUninitialized: false,
+    cookie:{ //cookie
+        httponly: true,
+        maxAge:60*60*1000, //set to 1 hour
+        secure:false
+        }}));  
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
+app.use(flash());
+//passport middlewares
+app.use(passport.initialize());
+app.use(passport.session());
 
+app.use(function(req, res, next) {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    next();
+  });
 app.get('/',(req,res)=>{
-    res.sendFile(path.join(__dirname + '/public/index.html'));
+    var sql='SELECT * FROM items';
+    conn.query(sql,(error,data)=>{
+        if(error) throw error;
+        res.render('buyerpage', {title: 'Product list',productData:data});
+    }); 
 });
-
+app.get('/register',(req,res)=>{
+    res.render('register');
+  });
+  
+  app.post('/register',(req,res)=>{
+    const { name,email,password,password2} = req.body;
+    let errors=[];
+    if(!name || !email || !password || !password2){
+       errors.push({msg: 'Input'});
+    }
+    if(password!==password2){
+      errors.push({msg:'Not matching'});
+    }
+    if(password.length <5){ 
+      errors.push({ msg: 'Password should have atleast 5 chars' });
+    }
+    if(errors.length >0){
+      res.render('register',{errors,name,email,password,password2});
+    }
+     else {
+      conn.query('SELECT email FROM user WHERE email ="' + email +'"', function (err, result) {
+          if (err) throw err;
+          console.log(result);    
+          if(result.length == 0){ 
+              bcrypt.genSalt(10, (err, salt) => { 
+              bcrypt.hash(password,salt, function(err, hash) {
+                  var sql = "INSERT INTO user (name,email,password) VALUES (?,?,?)";
+                  var values = [name,email,hash]
+                  conn.query(sql,values, function (err, result, fields) {
+                  if (err) throw err;
+                  req.flash('success_msg','You are now registered. Do login!');
+                  res.redirect('/login');
+                  });
+               });
+            });
+          }
+          else{
+              errors.push({ msg: 'Email is already registered' });
+              res.render('register', {
+              errors,
+              name,
+              email,
+              password,
+              password2
+            });               
+          }
+        });
+          
+       } 
+      });
+      app.get("/login",(req,res)=>{
+        res.render('login');
+      });
+      
+      app.get("/dashboard",require('connect-ensure-login').ensureLoggedIn(),
+      function(req, res){
+          conn.query("SELECT * from items",(error,data)=>{
+            if(error) throw error;
+            res.render('dashboard', {title: 'Product list',productData:data,user:req.user});
+    
+        });   
+    });
+    
+      
+      app.get('/logout',
+        function(req, res){
+          req.logout();
+          res.redirect('/login');
+        });
+      
+      app.post('/login', 
+        passport.authenticate('local-login', { 
+          successRedirect: '/dashboard',
+          failureRedirect: '/login',
+          failureFlash: true }),
+        function(req, res) {
+          res.redirect('/');
+        });
+      //Authentication using passport
+      passport.use(
+        "local-login",
+        new Strategy(
+          {
+            usernameField: "email",
+            passwordField: "password",
+            passReqToCallback: true
+          },
+          function(req, email, password, done) {
+            console.log(email);
+            console.log(password);
+            conn.query('SELECT * FROM user WHERE email ="' + email +'"',function(err, rows) {
+              console.log(rows);  
+              if (err) return done(err);
+                if (!rows.length) {
+                  return done(
+                    null,
+                    false,
+                    {message: "Email id not registered"});
+                }
+                console.log(rows[0].password);
+                bcrypt.compare(password,rows[0].password,function(err,result){
+                  if(result){
+                    return done(null, rows[0]);
+                  }
+                  else{
+                    return done(
+                      null,
+                      false,
+                      { message: 'Incorrect email or password' });
+                  }
+                });
+                  
+              });
+          }
+      )
+      );
+      //Serialize the user
+      passport.serializeUser(function(user, done) {
+        done(null, user.id);
+      });
+      
+      // Deserialize the user
+      passport.deserializeUser(function(id, done) {
+        conn.query("select * from user where id = " + id, function(
+          err,
+          rows
+        ) {
+          done(err, rows[0]);
+        });
+      });
+      
+  
+/*
 app.post('/auth',(req,res)=>{
     var username=req.body.username;
     var password=req.body.password;
@@ -113,7 +267,7 @@ app.get('/admin',(req,res)=>{
     });   
     //res.sendFile(path.join(__dirname+ '/public/admin.html'));
 });
-
+*/
 app.get('/insert',(req,res)=>{
     message = ''
     res.render('additem',{message:message});
