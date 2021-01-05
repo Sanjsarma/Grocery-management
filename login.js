@@ -50,8 +50,15 @@ app.get('/',(req,res)=>{
     var sql='SELECT * FROM items';
     conn.query(sql,(error,data)=>{
         if(error) throw error;
-        res.render('buyerpage', {title: 'Product list',productData:data});
+        res.render('home');
     }); 
+});
+app.get('/buyerpage',(req,res)=>{
+  var sql='SELECT * FROM items';
+  conn.query(sql,(error,data)=>{
+      if(error) throw error;
+      res.render('buyerpage', {title: 'Product list',productData:data});
+  }); 
 });
 app.get('/register',(req,res)=>{
     res.render('register');
@@ -90,13 +97,14 @@ app.get('/register',(req,res)=>{
             });
           }
           else{
-              errors.push({ msg: 'Email is already registered' });
-              res.render('register', {
+              req.flash('error','Email is already registered');
+             // errors.push({ msg: 'Email is already registered' });
+             res.render('register', {
               errors,
               name,
               email,
               password,
-              password2
+              password2 
             });               
           }
         });
