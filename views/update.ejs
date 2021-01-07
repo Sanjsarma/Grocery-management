@@ -51,6 +51,17 @@
   <!-- End Navigation -->
 </header>
 <!-- End Main Top -->
+<!-- Start All Title Box -->
+<div class="all-title-box">
+  <div class="container">
+      <div class="row">
+          <div class="col-lg-12">
+              <h2>UPDATE ITEM</h2>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- End All Title Box -->
 
 <!-- Start Top Search -->
 <div class="top-search">
@@ -63,41 +74,55 @@
   </div>
 </div>
 <!-- End Top Search -->
-
-<div class="data-form" align="center">
+<div style="background-color: #d9ebe3">
+<font size="4" face="times new roman" style="color:black; font-weight: bold; " >
+<div class="data-form" align="center" >
     <form action="update/:id" method="POST">
-      <h2>Edit records:</h2>
+      <h2 style="font-weight: bolder; padding-top: 30px;">Edit records</h2>
     </form>
   </div>
-  <div class="form" align="center">
+  <div class="form" align="center" style="padding: 10px 400px 10px 400px;">
     <form action="updated" method="POST">
-      <div class="form-group">
-        <label for="Id" class="col-md-3 control-label">Id</label>
+      <div class="form-group" >
+        <div style="text-align: left; padding-left: 135px;">
+        <label for="Id" class="col-md-3 control-label" >Id</label>
+        </div>
         <div class="col-md-9">
             <input type="text" class="form-control" name="id" placeholder="Sl. no" required>
         </div>
        </div>
-       <div class="form-group">
+       <div class="form-group"  >
+        <div style="text-align: left; padding-left: 135px;">
          <label for="itemname" class="col-md-3 control-label">Item</label>
+        </div>
          <div class="col-md-9">
           <input type="text" class="form-control" name="itemname" placeholder="Item" required>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" >
+          <div style="text-align: left; padding-left: 135px;">
           <label for="price" class="col-md-3 control-label">Price</label>
+          </div>
           <div class="col-md-9">
            <input type="text" class="form-control" name="price" placeholder="Price" required>
            </div>
          </div>
-         <div class="form-group">
+         <div class="form-group" >
+          <div style="text-align: left; padding-left: 135px;">
           <label for="quantity" class="col-md-3 control-label">Quantity</label>
+          </div>
           <div class="col-md-9">
            <input type="text" class="form-control" name="quantity" placeholder="Quantity">
            </div>
-         </div>      
-        <button type="submit">Submit</button>
+         </div>     
+         <div align="center" style="padding: 30px;" >
+        <button type="submit"style="font-weight: bolder;" >Submit</button>
+         </div>
       </form>
     </div>
+  
+    </font>
+  </div>
 
     
    <!-- <form action="updated" method="POST">
@@ -108,103 +133,55 @@
       <button type="submit">Submit</button>
     </form>  -->
     <!-- Start Footer  -->
+    
+<!-- Start Footer  -->
 <footer>
   <div class="footer-main">
       <div class="container">
   <div class="row">
     <div class="col-lg-4 col-md-12 col-sm-12">
-      <div class="footer-top-box">
-        <h3>Business Time</h3>
+      <div class="footer-top-box" style="padding-top: 10px;">
+        <h3 style="font-weight:bold">Business Time</h3>
         <ul class="list-time">
-          <li>Monday - Friday: 08.00am to 05.00pm</li> <li>Saturday: 10.00am to 08.00pm</li> <li>Sunday: <span>Closed</span></li>
+          <li>24/7 service</li> <li>Delivery: 10AM-10PM</li> 
         </ul>
       </div>
     </div>
     <div class="col-lg-4 col-md-12 col-sm-12">
       <div class="footer-top-box">
-        <h3>Newsletter</h3>
-        <form class="newsletter-box">
-          <div class="form-group">
-            <input class="" type="email" name="Email" placeholder="Email Address*" />
-            <i class="fa fa-envelope"></i>
-          </div>
-          <button class="btn hvr-hover" type="submit">Submit</button>
-        </form>
+      <div class="footer-widget">
+                      <h4>About Freshshop</h4>
+                      <p>Kochi’s first comprehensive online megastore, shopify.com, brings you everything you need to stock your shelves, right at a click away.</p> 
+        <p>Online grocery shopping has never been easier. Need things fresh? Whether it’s fruits and vegetables or dairy and meat, we have this covered as well! Get fresh eggs, meat, fish and more online at your convenience. Hassle-free Home Delivery options </p> 							
+                  </div>
       </div>
     </div>
     <div class="col-lg-4 col-md-12 col-sm-12">
-      <div class="footer-top-box">
-        <h3>Social Media</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <ul>
-                          <li><a href="#"><i class="fab fa-facebook" aria-hidden="true"></i></a></li>
-                          <li><a href="#"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
-                          <li><a href="#"><i class="fab fa-linkedin" aria-hidden="true"></i></a></li>
-                          <li><a href="#"><i class="fab fa-google-plus" aria-hidden="true"></i></a></li>
-                          <li><a href="#"><i class="fa fa-rss" aria-hidden="true"></i></a></li>
-                          <li><a href="#"><i class="fab fa-pinterest-p" aria-hidden="true"></i></a></li>
-                          <li><a href="#"><i class="fab fa-whatsapp" aria-hidden="true"></i></a></li>
-                      </ul>
-      </div>
-    </div>
-  </div>
-  <hr>
-          <div class="row">
-              <div class="col-lg-4 col-md-12 col-sm-12">
-                  <div class="footer-widget">
-                      <h4>About Freshshop</h4>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p> 
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p> 							
-                  </div>
-              </div>
-              <div class="col-lg-4 col-md-12 col-sm-12">
-                  <div class="footer-link">
-                      <h4>Information</h4>
-                      <ul>
-                          <li><a href="#">About Us</a></li>
-                          <li><a href="#">Customer Service</a></li>
-                          <li><a href="#">Our Sitemap</a></li>
-                          <li><a href="#">Terms &amp; Conditions</a></li>
-                          <li><a href="#">Privacy Policy</a></li>
-                          <li><a href="#">Delivery Information</a></li>
-                      </ul>
-                  </div>
-              </div>
-              <div class="col-lg-4 col-md-12 col-sm-12">
-                  <div class="footer-link-contact">
+                  <div class="footer-link-contact" style="padding-left: 120px;">
                       <h4>Contact Us</h4>
                       <ul>
                           <li>
-                              <p><i class="fas fa-map-marker-alt"></i>Address: Michael I. Days 3756 <br>Preston Street Wichita,<br> KS 67213 </p>
+                              <p><i class="fas fa-map-marker-alt"></i>Address: TMRA-114, MG Road Kochi,<br> Kerala </p>
                           </li>
                           <li>
                               <p><i class="fas fa-phone-square"></i>Phone: <a href="tel:+1-888705770">+1-888 705 770</a></p>
                           </li>
                           <li>
-                              <p><i class="fas fa-envelope"></i>Email: <a href="mailto:contactinfo@gmail.com">contactinfo@gmail.com</a></p>
+                              <p><i class="fas fa-envelope"></i>Email: <a href="mailto:contactinfo@gmail.com">contact@shopify.com</a></p>
                           </li>
                       </ul>
                   </div>
-              </div>
-          </div>
+    </div>
+  </div>
+  <hr>           
       </div>
   </div>
 </footer>
 <!-- End Footer  -->
 
-<!--
-<footer class="container-fluid text-center">
-  <p>Online Store Copyright</p>  
-  <form class="form-inline">Get deals:
-    <input type="email" class="form-control" size="50" placeholder="Email Address">
-    <button type="button" class="btn btn-danger">Sign Up</button>
-  </form>
-</footer>
--->
-
 <!-- Start copyright  -->
 <div class="footer-copyright">
-  <p class="footer-company">All Rights Reserved. &copy; 2018 <a href="#">ThewayShop</a> Design By :
+  <p class="footer-company">All Rights Reserved. &copy; 2020 <a href="#">ThewayShop</a> Design By :
       <a href="https://html.design/">html design</a></p>
 </div>
 <!-- End copyright  -->
