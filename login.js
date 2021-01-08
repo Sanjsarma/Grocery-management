@@ -15,7 +15,7 @@ var Strategy = require('passport-local').Strategy;
 const conn=mysql.createConnection({
     host:'localhost',
     user: 'root',
-    password: 'paper',
+    password: 'sanjana123',
     database: 'Ecommercedb'
 });
 
@@ -386,14 +386,14 @@ app.get('/alertcustomer',(req,res)=>{
 });*/
 
 app.post('/alertcustomer',(req,res)=>{
-    const accountSid = '';
-    const authToken = '';
+    const accountSid = 'ACb6f4119fb55de4857897018d076c2c58';
+    const authToken = '62f07a0532bf3549cf03a38d3f26f472';
     const client = twilio(accountSid, authToken);
     client.messages
       .create({
          body: "25% offer!",
-         from: '',
-         to: ''
+         from: '+12513049459',
+         to: '+918921791774'
        }).then(message => console.log(message.sid));
        res.redirect('/display');
 });
@@ -408,6 +408,35 @@ app.get('/delete/:id', (req, res, next)=> {
     
   });
 
+  app.post("/addtocart/:id/:name/:price",(req,res)=>{
+    var id=req.params.id;
+    var name=req.params.name;
+    var price=req.params.price;
+    var sql='INSERT into cart(i_name,price) VALUES (?,?);'
+    var insertitem=[name,price];
 
+    conn.query(sql,insertitem,(err,data)=>{
+      if(err) throw err;
+      res.redirect("/cart");
+    });
+     
+  });
+
+  app.get("/cart",(req,res)=>{
+    var sql="SELECT * FROM cart";
+    conn.query(sql,(err,data)=>{
+      if(err) throw err;
+      console.log(data);
+      res.render('cart',{productData:data});
+    })
+  });
+
+  app.post("/bill",(req,res)=>{
+   var sql='SELECT price from cart;';
+   conn.query(sql,(err,data)=>{
+     if(err) throw err;
+     res.render('bill',{productData:data});
+   })
+  });
 
 app.listen(5000);

@@ -478,6 +478,9 @@
                 <div class="card-body" style="padding-top: 70px; font-weight: bold;">
                   <p class="card-text"><%=data.i_name%></p>
                   <p class="card-text">₹<%=data.price%></p>
+                <form action="/addtocart/<%=data.i_no%>/<%=data.i_name%>/<%=data.price%>" method="POST"> 
+                  <button type="submit">Add to cart</button>
+                </form>
                 </div>
               </div>
             </div>

@@ -1,0 +1,31 @@
+<!DOCTYPE html> 
+<head>
+    <title>Bill</title>
+</head>
+<body>
+<div class="container-fluid"   >
+    <div class="table-data" style="padding: 50px 300px 50px 0px;" align="center" >
+        <font size="3" face="times new roman"  style=" font-weight: lighter;"  >
+        <h2 style="font-weight: bold;">Bill</h2>
+        
+           
+           
+                
+                <%
+                if(productData.length!=0){
+                var i=1; var total=0;
+                productData.forEach(function(data){
+                {
+                %>
+                
+                <%  i++; total+=data.price;} }) %>
+                <% } else{ %>
+                   
+                <%  }  %>
+                <h2>Total=Rs.<%=total %></h2>
+                        
+        
+            </div>
+        </div>
+    </body>
+</html>      
