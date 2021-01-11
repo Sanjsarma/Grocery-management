@@ -82,6 +82,7 @@
                         <li class="nav-item"><a class="nav-link" href="/insert">Insert</a></li>
                         <li class="nav-item"><a class="nav-link" href="/display">Display</a></li>
                         <li class="nav-item"><a class="nav-link" href="/offers">Offers</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/users">Buyers</a></li>
                         
                        <li class="nav-item ">
                     <!--     <div class="login-box" style="padding-top: 10px;">
@@ -403,7 +404,7 @@
                   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
                   <i class="fa fa-bars"></i>
               </button>
-                  <a class="navbar-brand" href="index.html"><img src="photos/logo.png" class="logo" alt=""></a>
+                  <a class="navbar-brand" href="/dashboard"><img src="photos/logo.png" class="logo" alt=""></a>
               </div>
               <!-- End Header Navigation -->
     
@@ -412,6 +413,8 @@
                   <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
                       <li class="nav-item"><a class="nav-link" href="/dashboard">Home</a></li>
                       <li class="nav-item"><a class="nav-link" href="buyerabout.html">About Us</a></li>
+                      <li class="nav-item"><a class="nav-link" href="/cart">Cart</a></li>
+                      <li class="nav-item"><a class="nav-link" href="/userinfo">Profile</a></li>
                      <!--
                       <li class="nav-item"><a class="nav-link" href="/insert">Insert</a></li>
                       <li class="nav-item"><a class="nav-link" href="/display">Display</a></li>
@@ -440,7 +443,7 @@
       <div class="container">
           <div class="row">
               <div class="col-lg-12">
-                  <h2>Welcome <%= user.name %> </h2>
+                  <h2>Welcome <%= user.name %>! </h2>
               </div>
           </div>
       </div>
@@ -465,7 +468,7 @@
           if(productData.length!=0){
           var i=1;
           productData.forEach(function(data){
-          if(data.status=="y"){
+          if(data.status=="y" && data.quantity!=0){
             %>
           
           <div class="container">
@@ -478,7 +481,13 @@
                 <div class="card-body" style="padding-top: 70px; font-weight: bold;">
                   <p class="card-text"><%=data.i_name%></p>
                   <p class="card-text">₹<%=data.price%></p>
-                <form action="/addtocart/<%=data.i_no%>/<%=data.i_name%>/<%=data.price%>" method="POST"> 
+                  <p class="card-text">Only <%=data.quantity%> left!</p>
+                  <form action="/addtocart/<%=data.i_no%>/<%=data.i_name%>/<%=data.price%>" method="post" enctype="multipart/form-data"> 
+                  <div class="form-group">
+                    <div class="col-md-9">
+                        <input type="number" class="form-control" name="qty" placeholder="Quantity"></input>
+                    </div>
+                </div>
                   <button type="submit">Add to cart</button>
                 </form>
                 </div>

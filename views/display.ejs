@@ -126,7 +126,7 @@
                 if(productData.length!=0){
                 var i=1;
                 productData.forEach(function(data){
-                if(data.status=='y'){
+                if(data.status=='y' && data.quantity!=0){
                 %>
                 <tr>
                     <td><%=i%></td>
