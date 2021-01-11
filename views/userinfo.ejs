@@ -61,7 +61,7 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fa fa-bars"></i>
             </button>
-                <a class="navbar-brand" href="index.html"><img src="photos/logo.png" class="logo" alt=""></a>
+                <a class="navbar-brand" href="/dashboard"><img src="photos/logo.png" class="logo" alt=""></a>
             </div>
             <!-- End Header Navigation -->
   
@@ -69,13 +69,12 @@
             <div class="collapse navbar-collapse" id="navbar-menu" >
                 <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp" >
                     <li class="nav-item"><a class="nav-link" href="/dashboard">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="aboutbuyer.html">About Us</a></li>
                     
-                    <li class="nav-item"><a class="nav-link" href="/insert">Insert</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/display">Display</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/offers">Offers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/cart">Cart</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/userinfo">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/edituserinfo">Edit profile</a></li>
                     <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
-
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -92,56 +91,35 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h2>Item List</h2>
+                <h2>Profile</h2>
                 
             </div>
         </div>
     </div>
   </div>
   <!-- End All Title Box -->
-  
-  
+   
 <div class="container-fluid"   >
     <div class="table-data" style="padding: 50px 300px 50px 0px;" align="center" >
         <font size="3" face="times new roman"  style=" font-weight: lighter;"  >
-        <h2 style="font-weight: bold;">Items</h2>
-        
-            <table class="table table-dark" border="1" >
-                <thead>
-                <tr>
-                    <th>Sl.no</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Offer</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-
+        <h2 style="font-weight: bold;">Profile</h2>
+            
            
                 
                 <%
-                if(productData.length!=0){
+                if(userData.length!=0){
                 var i=1;
-                productData.forEach(function(data){
-                if(data.status=='y' && data.quantity!=0){
+                userData.forEach(function(data){
+                if(data.loggedin=='y'){
                 %>
-                <tr>
-                    <td><%=i%></td>
-                    <td><%=data.i_name %></td>
-                    <td><%=data.price %></td>
-                    <td><%=data.quantity %></td>
-                    <td ><a href="/addoffer/<%=data.i_no%>" style="color: #ddd;">Add offer</a></td>
-                    <td><a href="/update/<%=data.i_no%>" style="color: #ddd;">Edit</button></td>
-                    <td><a href="/delete/<%=data.i_no%>" style="color: #ddd;">Delete</a></td>
-                </tr>
+                    <h1>Name:</h1>
+                    <h1><%=data.name %></h1>
+                    <h1><%=data.email %></h1>
+                    <h1><%=data.phone %></h1>
+                    <h1><%=data.address %></h1>
                 <%  i++; } }) %>
                 <% } else{ %>
-                    <tr>
-                        <td colspan="7">No Data Found</td>
-                    </tr>
+                    <h1>No data available</h1>
                 <% } %>
             </tbody>
             </table>

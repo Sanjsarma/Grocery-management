@@ -77,54 +77,48 @@
         <div id="signupbox" style=" margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                                     
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <div class="panel-title">Insert</div>
+                    <div class="panel-title">Edit profile</div>
                 </div> 
                 <div class="panel-body" >
-                    <form class="form-horizontal" role="form" method="post" action="/insert" enctype="multipart/form-data">
-                       <% if (message.length > 0) { %>
-                            <div class="alert alert-success col-sm-12"><%= message %></div>
-                        <% } %>
-                        <div id="signupalert" style="display:none" class="alert alert-danger">
-                            <p>Error:</p>
-                            <span></span>
-                        </div>
+                    <form class="form-horizontal" role="form" method="post" action="/edituserinfo" enctype="multipart/form-data">
+                       
                         <div class="form-group">
                             <div style="text-align: left; padding-left: 100px;">
-                            <label for="itemname" class="col-md-3 control-label" >Item</label>
+                            <label for="name" class="col-md-3 control-label" >Name</label>
                         </div>
                             <div class="col-md-9">
-                                <input type="text" class="form-control" name="itemname" placeholder="Item">
+                                <input type="text" class="form-control" name="name" placeholder="Name">
                             </div>
                            
                         </div>
                         <div class="form-group">
                             <div style="text-align: left; padding-left: 100px;">
-                            <label for="price" class="col-md-3 control-label">Price</label>
+                            <label for="email" class="col-md-3 control-label">Email</label>
                             </div>
                             <div class="col-md-9">
-                                <input type="text" class="form-control" name="price" placeholder="Price">
+                                <input type="text" class="form-control" name="email" placeholder="Email">
                             </div>
                         </div>
                         <div class="form-group">
                             <div style="text-align: left; padding-left: 100px;">
-                            <label for="quantity" class="col-md-3 control-label">Quantity</label>
+                            <label for="phone" class="col-md-3 control-label">Phone</label>
                             </div>
                             <div class="col-md-9">
-                                <input type="number" class="form-control" name="quantity" placeholder="Quantity">
+                                <input type="text" class="form-control" name="phone" placeholder="Phone">
                             </div>
                         </div>
                         <div class="form-group">
                             <div style="text-align: left; padding-left: 100px;">
-                            <label for="uploaded_image" class="col-md-3 control-label">Image</label>
+                            <label for="address" class="col-md-3 control-label">Address</label>
                             </div>
-                            <div class="col-sm-9">
-                                <input class="form-control" type="file" name="uploaded_image"/>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="address" placeholder="Address">
                             </div>
-                        </div>                                
+                        </div>
                         <div class="form-group">
                             <!-- Button -->                                       
                             <div class="col-md-offset-3 col-md-9">
-                                <button id="btn-signup" type="submit" class="btn btn-info" style="text-align:center; font-weight: bold; padding-right: 18px;" ><i class="icon-hand-right" ></i> &nbsp Insert</button>
+                                <button id="btn-signup" type="submit" class="btn btn-info" style="text-align:center; font-weight: bold; padding-right: 18px;" ><i class="icon-hand-right" ></i> &nbsp Update</button>
                             </div>
                         </div>  
                     </form>

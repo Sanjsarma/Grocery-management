@@ -15,8 +15,8 @@ var Strategy = require('passport-local').Strategy;
 const conn=mysql.createConnection({
     host:'localhost',
     user: 'root',
-    password: 'paper',
-    database: 'Ecommercedb'
+    password: '',
+    database: ''
 });
 
 const app=express();
@@ -127,6 +127,18 @@ app.get('/register',(req,res)=>{
       
       app.get('/logout',
         function(req, res){
+          var sql='SELECT email from user WHERE loggedin="y";';
+          conn.query(sql,(err,data)=>{
+            var email=data[0].email;
+            if(err) throw err;
+            else{
+              var sqlu='UPDATE user set loggedin="n" where email="'+email+'"';
+              conn.query(sqlu,(err,data)=>{
+                if(err) throw err;
+              });
+
+            };
+          });
           req.logout();
           res.redirect('/login');
         });
@@ -151,6 +163,10 @@ app.get('/register',(req,res)=>{
           function(req, email, password, done) {
             console.log(email);
             console.log(password);
+            conn.query('UPDATE user SET loggedin="y" where email=+"'+email+'"',(err,data)=>{
+              if(err) throw err;
+              console.log(data);
+            });
             conn.query('SELECT * FROM user WHERE email ="' + email +'"',function(err, rows) {
               console.log(rows);  
               if (err) return done(err);
@@ -386,14 +402,14 @@ app.get('/alertcustomer',(req,res)=>{
 });*/
 
 app.post('/alertcustomer',(req,res)=>{
-    const accountSid = '';
-    const authToken = '';
+    const accountSid = 'ACb6f4119fb55de4857897018d076c2c58';
+    const authToken = '62f07a0532bf3549cf03a38d3f26f472';
     const client = twilio(accountSid, authToken);
     client.messages
       .create({
          body: "25% offer!",
-         from: '',
-         to: ''
+         from: '+12513049459',
+         to: '+918921791774'
        }).then(message => console.log(message.sid));
        res.redirect('/display');
 });
@@ -408,6 +424,95 @@ app.get('/delete/:id', (req, res, next)=> {
     
   });
 
+  app.post("/addtocart/:id/:name/:price",(req,res)=>{
+    var id=req.params.id;
+    var name=req.params.name;
+    var price=req.params.price;
+    var quantity=req.body.qty;
+    let errors=[];
+    console.log(quantity);
+    var sqlq='SELECT quantity FROM items where i_no='+id;
+    conn.query(sqlq,(err,data)=>{
+      console.log(data[0].quantity);
+      if(err) throw err;
+      if(quantity>data[0].quantity){
+        console.log("Out of stock");
+       // errors.push({msg:'Out of stock'});
+      console.log(data);
+      res.redirect('/outofstock');  
+      }
+   else{
+    var newquantity=data[0].quantity-quantity;
+    console.log(newquantity);
+    var sql='INSERT into cart(i_name,price,quantity) VALUES (?,?,?);'
+    var insertitem=[name,price,quantity];
 
+    conn.query(sql,insertitem,(err,data)=>{
+      console.log(data);
+      if(err) throw err;
+      res.redirect("/cart");
+    
+    });
+   var sqlu='UPDATE items SET quantity=? where i_no='+id;
+   var updateItem=[newquantity];
+   conn.query(sqlu,updateItem,(err,data)=>{
+     if(err) throw err;
+   });
+  } 
+     
+  });  });
+  app.get('/outofstock',(req,res)=>{
+    res.render("outofstock");
+  })
+
+  app.get("/cart",(req,res)=>{
+    var sql="SELECT * FROM cart";
+    conn.query(sql,(err,data)=>{
+      if(err) throw err;
+     // console.log(data);
+      res.render('cart',{productData:data});
+    })
+  });
+
+  app.post("/bill",(req,res)=>{
+   var sql='SELECT price from cart;';
+   conn.query(sql,(err,data)=>{
+     if(err) throw err;
+     res.render('bill',{productData:data});
+   })
+  });
+
+  app.get('/userinfo',(req,res)=>{
+    var sql='SELECT * from user';
+    conn.query(sql,(err,data)=>{
+      if(err) throw err;
+      res.render('userinfo',{userData:data});
+    })
+  });
+
+  app.get('/edituserinfo',(req,res)=>{
+    res.render('edituserinfo');
+  });
+
+  app.post('/edituserinfo',(req,res)=>{
+     var name=req.body.name;
+     var email=req.body.email;
+     var phone=req.body.phone;
+     var address=req.body.address;
+     var sql='UPDATE user set name=?,phone=?,address=? where email="'+email+'"';
+     var editUser=[name,phone,address];
+     conn.query(sql,editUser,(err,data)=>{
+       if(err) throw err;
+       res.redirect('/userinfo');
+     })
+  });
+
+app.get('/users',(req,res)=>{
+  var sql='select * from user';
+  conn.query(sql,(err,data)=>{
+    if(err) throw err;
+    res.render('users',{userData:data});
+  })
+});
 
 app.listen(5000);
