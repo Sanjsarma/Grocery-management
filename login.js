@@ -127,6 +127,18 @@ app.get('/register',(req,res)=>{
       
       app.get('/logout',
         function(req, res){
+          var sql='SELECT email from user WHERE loggedin="y";';
+          conn.query(sql,(err,data)=>{
+            var email=data[0].email;
+            if(err) throw err;
+            else{
+              var sqlu='UPDATE user set loggedin="n" where email="'+email+'"';
+              conn.query(sqlu,(err,data)=>{
+                if(err) throw err;
+              });
+
+            };
+          });
           req.logout();
           res.redirect('/login');
         });
@@ -151,6 +163,10 @@ app.get('/register',(req,res)=>{
           function(req, email, password, done) {
             console.log(email);
             console.log(password);
+            conn.query('UPDATE user SET loggedin="y" where email=+"'+email+'"',(err,data)=>{
+              if(err) throw err;
+              console.log(data);
+            });
             conn.query('SELECT * FROM user WHERE email ="' + email +'"',function(err, rows) {
               console.log(rows);  
               if (err) return done(err);
@@ -412,21 +428,48 @@ app.get('/delete/:id', (req, res, next)=> {
     var id=req.params.id;
     var name=req.params.name;
     var price=req.params.price;
-    var sql='INSERT into cart(i_name,price) VALUES (?,?);'
-    var insertitem=[name,price];
+    var quantity=req.body.qty;
+    let errors=[];
+    console.log(quantity);
+    var sqlq='SELECT quantity FROM items where i_no='+id;
+    conn.query(sqlq,(err,data)=>{
+      console.log(data[0].quantity);
+      if(err) throw err;
+      if(quantity>data[0].quantity){
+        console.log("Out of stock");
+       // errors.push({msg:'Out of stock'});
+      console.log(data);
+      res.redirect('/outofstock');  
+      }
+   else{
+    var newquantity=data[0].quantity-quantity;
+    console.log(newquantity);
+    var sql='INSERT into cart(i_name,price,quantity) VALUES (?,?,?);'
+    var insertitem=[name,price,quantity];
 
     conn.query(sql,insertitem,(err,data)=>{
+      console.log(data);
       if(err) throw err;
       res.redirect("/cart");
+    
     });
+   var sqlu='UPDATE items SET quantity=? where i_no='+id;
+   var updateItem=[newquantity];
+   conn.query(sqlu,updateItem,(err,data)=>{
+     if(err) throw err;
+   });
+  } 
      
-  });
+  });  });
+  app.get('/outofstock',(req,res)=>{
+    res.render("outofstock");
+  })
 
   app.get("/cart",(req,res)=>{
     var sql="SELECT * FROM cart";
     conn.query(sql,(err,data)=>{
       if(err) throw err;
-      console.log(data);
+     // console.log(data);
       res.render('cart',{productData:data});
     })
   });
@@ -438,5 +481,38 @@ app.get('/delete/:id', (req, res, next)=> {
      res.render('bill',{productData:data});
    })
   });
+
+  app.get('/userinfo',(req,res)=>{
+    var sql='SELECT * from user';
+    conn.query(sql,(err,data)=>{
+      if(err) throw err;
+      res.render('userinfo',{userData:data});
+    })
+  });
+
+  app.get('/edituserinfo',(req,res)=>{
+    res.render('edituserinfo');
+  });
+
+  app.post('/edituserinfo',(req,res)=>{
+     var name=req.body.name;
+     var email=req.body.email;
+     var phone=req.body.phone;
+     var address=req.body.address;
+     var sql='UPDATE user set name=?,phone=?,address=? where email="'+email+'"';
+     var editUser=[name,phone,address];
+     conn.query(sql,editUser,(err,data)=>{
+       if(err) throw err;
+       res.redirect('/userinfo');
+     })
+  });
+
+app.get('/users',(req,res)=>{
+  var sql='select * from user';
+  conn.query(sql,(err,data)=>{
+    if(err) throw err;
+    res.render('users',{userData:data});
+  })
+});
 
 app.listen(5000);
