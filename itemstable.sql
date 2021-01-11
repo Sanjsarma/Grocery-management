@@ -8,10 +8,17 @@ image VARCHAR(255),
 status CHAR DEFAULT "y", 
 offer CHAR DEFAULT "n", 
 PRIMARY KEY(i_no))ENGINE=InnoDB;
-
+            
 create table user(id INTEGER AUTO_INCREMENT,
-name VARCHAR(50) not null, 
+name VARCHAR(50) not null,
 email VARCHAR(50) NOT NULL, 
 password VARCHAR(200) NOT NULL, 
-role VARCHAR(50) default "customer", 
+role VARCHAR(50) default "customer",
+phone VARCHAR(12),
+address VARCHAR(100), 
+loggedin CHAR default "n", 
 primary key(id))ENGINE=InnoDB;
+
+create table cart(i_name VARCHAR(50), 
+                  price DECIMAL(10,2), 
+                  quantity INTEGER))ENGINE=InnoDB;
