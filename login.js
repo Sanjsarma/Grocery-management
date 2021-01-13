@@ -14,8 +14,8 @@ var Strategy = require('passport-local').Strategy;
 
 const conn=mysql.createConnection({
     host:'localhost',
-    user: 'root',
-    password: 'paper',
+    user: '',
+    password: '',
     database: 'Ecommercedb'
 });
 
@@ -431,6 +431,18 @@ app.get('/delete/:id', (req, res, next)=> {
     var quantity=req.body.qty;
     let errors=[];
     console.log(quantity);
+    var usersql='SELECT name from user where loggedin="y"';
+    conn.query(usersql,(err,data)=>{
+      if(err) throw err;
+      var user=data[0].name;
+    /*  var usercart='INSERT INTO cart(u_name) values ("'+user+'")';
+      conn.query(usercart,(err,data)=>{
+        if(err) throw err;
+      }); */
+        var s='SELECT i_name,price,quantity FROM cart where i_name=? and u_name=?';
+        var add=[name,user];
+        conn.query(s,add,(err,data)=>{
+        if(!data.length){
     var sqlq='SELECT quantity FROM items where i_no='+id;
     conn.query(sqlq,(err,data)=>{
       console.log(data[0].quantity);
@@ -444,8 +456,8 @@ app.get('/delete/:id', (req, res, next)=> {
    else{
     var newquantity=data[0].quantity-quantity;
     console.log(newquantity);
-    var sql='INSERT into cart(i_name,price,quantity) VALUES (?,?,?);'
-    var insertitem=[name,price,quantity];
+    var sql='INSERT into cart(i_name,price,quantity,u_name) VALUES (?,?,?,?)';
+    var insertitem=[name,price,quantity,user];
 
     conn.query(sql,insertitem,(err,data)=>{
       console.log(data);
@@ -460,26 +472,80 @@ app.get('/delete/:id', (req, res, next)=> {
    });
   } 
      
-  });  });
+  }); }  
+else{
+  var sqlq='SELECT quantity FROM items where i_no='+id;
+      conn.query(sqlq,(err,data)=>{
+      //console.log(data);
+      //console.log(data[0].quantity);
+      if(err) throw err;
+      if(quantity>data[0].quantity){
+        console.log("Out of stock");
+       // errors.push({msg:'Out of stock'});
+      console.log(data);
+      res.redirect('/outofstock');  
+      }
+      else{
+        var sqlp='select i_name,price,quantity from cart where i_name="'+name+'" and u_name="'+user+'"';
+        conn.query(sqlp,(err,data)=>{
+          if(err) throw err;
+        console.log(quantity);
+        console.log(data[0].quantity);
+       // var newquantity=data[0].quantity+quantity;
+       // console.log(newquantity);
+      //  var changedquantity=newquantity-quantity;
+       // console.log(changedquantity);
+       var sql='UPDATE cart set quantity =quantity+? where i_name="'+name+'" and u_name="'+user+'"';
+        var insertitem=[quantity];
+
+    conn.query(sql,insertitem,(err,data)=>{
+      if(err) throw err;
+      console.log(data);
+      res.redirect("/cart");
+    
+    });
+    conn.query('SELECT quantity from items where i_name="'+name+'"',(err,data)=>{
+      if(err) throw err;
+      console.log(quantity);
+      var updated=data[0].quantity-quantity;
+      var sqlu='UPDATE items SET quantity=? where i_no='+id;
+      var updateItem=[updated];
+      conn.query(sqlu,updateItem,(err,data)=>{
+       if(err) throw err;
+      });
+    });
+ });
+  
+} });  } }); }); });
   app.get('/outofstock',(req,res)=>{
     res.render("outofstock");
   })
 
   app.get("/cart",(req,res)=>{
-    var sql="SELECT * FROM cart";
+    var usersql='SELECT name from user where loggedin="y"';
+    conn.query(usersql,(err,data)=>{
+      if(err) throw err;
+      var user=data[0].name;
+    var sql='SELECT i_name,price,quantity FROM cart where u_name="'+user+'"';
     conn.query(sql,(err,data)=>{
       if(err) throw err;
      // console.log(data);
       res.render('cart',{productData:data});
     })
   });
+  });
 
   app.post("/bill",(req,res)=>{
-   var sql='SELECT price from cart;';
+    var usersql='SELECT name from user where loggedin="y"';
+    conn.query(usersql,(err,data)=>{
+      if(err) throw err;
+      var user=data[0].name;
+   var sql='SELECT price,quantity from cart where u_name="'+user+'"';
    conn.query(sql,(err,data)=>{
      if(err) throw err;
      res.render('bill',{productData:data});
-   })
+   });
+  });
   });
 
   app.get('/userinfo',(req,res)=>{
@@ -513,6 +579,32 @@ app.get('/users',(req,res)=>{
     if(err) throw err;
     res.render('users',{userData:data});
   })
+});
+
+app.get('/cart/delete/:name',(req,res)=>{
+  var name=req.params.name;
+  var usersql='SELECT name from user where loggedin="y"';
+    conn.query(usersql,(err,data)=>{
+      if(err) throw err;
+      var user=data[0].name;
+      var s='select quantity from cart where i_name="'+name+'" and u_name="'+user+'"';
+      conn.query(s,(err,data)=>{
+        if(err)throw err;
+        var quantity=data[0].quantity;
+        console.log(quantity);
+        var sql='delete from cart where i_name=? and u_name="'+user+'"';
+        conn.query(sql,name,(err,data)=>{
+        if(err) throw err;
+        console.log("deleted");
+       });
+    var sqlupdate='update items set quantity=quantity+? where i_name="'+name+'"';
+    var updatedq=[quantity];
+    conn.query(sqlupdate,updatedq,(err,data)=>{
+      if(err) throw err;
+    });
+  });  
+});
+  res.redirect('/cart');
 });
 
 app.listen(5000);

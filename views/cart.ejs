@@ -130,6 +130,7 @@
                 if(productData.length!=0){
                 var i=1;
                 productData.forEach(function(data){
+                if(data.i_name!="NULL")
                 {
                 %>
                 <tr>
@@ -137,7 +138,7 @@
                     <td><%=data.i_name %></td>
                     <td><%=data.price %></td>
                     <td><%=data.quantity %></td>
-                    <td><a href="#" style="color: #ddd; text-align: center;">Delete</a></td>
+                    <td><a href="/cart/delete/<%=data.i_name%>" style="color: #ddd; text-align: center;">Delete</a></td>
                 </tr>
                 <%  i++; } }) %>
                 <% } else{ %>
