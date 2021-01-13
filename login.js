@@ -15,8 +15,8 @@ var Strategy = require('passport-local').Strategy;
 const conn=mysql.createConnection({
     host:'localhost',
     user: 'root',
-    password: '',
-    database: ''
+    password: 'sanjana123',
+    database: 'Ecommercedb'
 });
 
 const app=express();
@@ -475,7 +475,7 @@ app.get('/delete/:id', (req, res, next)=> {
   });
 
   app.post("/bill",(req,res)=>{
-   var sql='SELECT price from cart;';
+   var sql='SELECT price,quantity from cart;';
    conn.query(sql,(err,data)=>{
      if(err) throw err;
      res.render('bill',{productData:data});
