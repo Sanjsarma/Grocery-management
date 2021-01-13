@@ -15,8 +15,8 @@ var Strategy = require('passport-local').Strategy;
 const conn=mysql.createConnection({
     host:'localhost',
     user: 'root',
-    password: '',
-    database: ''
+    password: 'paper',
+    database: 'Ecommercedb'
 });
 
 const app=express();
