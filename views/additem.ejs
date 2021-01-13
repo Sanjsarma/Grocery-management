@@ -14,7 +14,7 @@
 
   </head>
   <body>
-      <!-- Start Main Top -->
+      <!-- Start Main Top --> 
  <header class="main-header">
     <!-- Start Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-default bootsnav">
@@ -37,7 +37,7 @@
                     <li class="nav-item"><a class="nav-link" href="/insert">Insert</a></li>
                     <li class="nav-item"><a class="nav-link" href="/display">Display</a></li>
                     <li class="nav-item"><a class="nav-link" href="/offers">Offers</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/logout" class="btn btn-secondary" style="background-color: #adab51; padding-left: 25px;">Logout</a></li>
 
                 </ul>
             </div>
@@ -72,15 +72,16 @@
     </div>
   </div>
   <!-- End Top Search -->
+
     <div class="container col-sm-12" id="mainform" style="padding: 100px;" align=center>
         <font size="4" face="times new roman" style="color:black; font-weight: bold; " >
-        <div id="signupbox" style=" margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                                     
+        <div id="signupbox" style=" margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 border border-success">                                     
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <div class="panel-title">Insert</div>
+                    <div class="panel-title" style="padding-top: 20px;">Insert</div>
                 </div> 
                 <div class="panel-body" >
-                    <form class="form-horizontal" role="form" method="post" action="/insert" enctype="multipart/form-data">
+                    <form class="form-horizontal " role="form" method="post" action="/insert" enctype="multipart/form-data">
                        <% if (message.length > 0) { %>
                             <div class="alert alert-success col-sm-12"><%= message %></div>
                         <% } %>
@@ -91,6 +92,7 @@
                         <div class="form-group">
                             <div style="text-align: left; padding-left: 100px;">
                             <label for="itemname" class="col-md-3 control-label" >Item</label>
+                            <hr>
                         </div>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" name="itemname" placeholder="Item">
@@ -124,7 +126,7 @@
                         <div class="form-group">
                             <!-- Button -->                                       
                             <div class="col-md-offset-3 col-md-9">
-                                <button id="btn-signup" type="submit" class="btn btn-info" style="text-align:center; font-weight: bold; padding-right: 18px;" ><i class="icon-hand-right" ></i> &nbsp Insert</button>
+                                <button id="btn-signup" type="submit" class="btn btn-info" style="text-align:center; font-weight: bold; padding-right: 18px; background-color: #adab51;" ><i class="icon-hand-right" ></i> &nbsp Insert</button>
                             </div>
                         </div>  
                     </form>
