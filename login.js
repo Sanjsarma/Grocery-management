@@ -14,8 +14,8 @@ var Strategy = require('passport-local').Strategy;
 
 const conn=mysql.createConnection({
     host:'localhost',
-    user: '',
-    password: '',
+    user: 'root',
+    password: 'sanjana123',
     database: 'Ecommercedb'
 });
 
@@ -208,103 +208,14 @@ app.get('/register',(req,res)=>{
         });
       });
       
-  
-/*
-app.post('/auth',(req,res)=>{
-    var username=req.body.username;
-    var password=req.body.password;
-    if(username && password){
-        conn.query('SELECT * FROM accounts WHERE username= ? AND password= ?',[username,password], (error,results,fields)=>{
-         if(results.length>0 && username=="test"){
-             req.session.loggedin = true;
-             req.session.username=username;
-             res.redirect('/home');
-         }else if(results.length>0){
-            req.session.loggedin = true;
-            req.session.username=username;
-            res.redirect('/home');
-         }
-         else{
-             res.send("Incorrect");
-         }
-         res.end();
-        });
 
-    }else{
-        res.send("Please enter username and pass");
-        res.end();
-    }
-});
-var Users=[];
-app.get('/signmeup',(req,res)=>{
-    res.sendFile(path.join(__dirname + '/public/signup.html'));
-})
-
-
-app.post('/signup',(req,res)=>{
-    if(!req.body.username || !req.body.password){
-        res.status("400");
-        res.send("Invalid details!");
-    }
-    else{
-    Users.filter(function(user){
-        if(user.username===req.body.id){
-            res.render('index',{message: 'User already exists!'});
-        }
-    });
-    var sql='INSERT INTO accounts(username,password,email) values (?,?,?)'
-    var newUser=[req.body.username, req.body.password,req.body.email];
-    conn.query(sql,newUser, (error,results,fields)=>{
-        if(error){
-            return res.status(400);
-        }
-        else{
-            return res.redirect('/home'); 
-        }
-    });
-    
-    }
-});
-
-app.get('/home', (request, response)=>{
-	if (request.session.loggedin && request.session.username=="test") {
-		response.redirect('/admin');
-    }else if(request.session.loggedin){
-        response.redirect('/buyer');
-    } 
-    else {
-		response.send('Please login to view this page!');
-	}
-	response.end();
-});
-
-app.get('/buyer', (req,res)=>{
-    res.sendFile(path.join(__dirname + '/public/buyer.html'));
-});
-
-app.get('/admin',(req,res)=>{
-    var sql='SELECT * FROM items';
-    conn.query(sql,(error,data)=>{
-        if(error) throw error;
-        res.render('admin', {title: 'Product list',productData:data});
-
-    });   
-    //res.sendFile(path.join(__dirname+ '/public/admin.html'));
-});
-*/
 app.get('/insert',(req,res)=>{
     message = ''
     res.render('additem',{message:message});
 });
 
 app.post('/insert',(req,res)=>{
-  /*  var sql = 'INSERT INTO items (i_name, price, quantity) VALUES (?,?,?)';
-    var newItem=[req.body.itemname,req.body.price,req.body.quantity];
-    conn.query(sql, newItem, function (error,data) {
-       if (error) throw error;
-            console.log("Item inserted");
-        });
-    res.redirect('/admin'); */
+  
     message = '';
    
       var post  = req.body;
@@ -362,11 +273,6 @@ app.post('/update/updated',(req,res)=>{
     conn.query(sql,updateItem,(error,data)=>{
     if(error) throw error ;
     console.log("Updated");
-    /*else{
-        console.log("Updated successfully");}
-    //    res.end();
-    //res.end("<h1>Successfully updated<h1><script> setTimeout(function() { window.location.href = \"http://localhost:5000/display\";}, 500); </script>")
-    //res.redirect('/display');*/
     res.redirect('/display');
    });
 });
@@ -396,10 +302,7 @@ app.get('/offers',(req,res)=>{
         res.render('offers',{title: 'Offers page', productData:data});
     });
 });
-/*
-app.get('/alertcustomer',(req,res)=>{
-    res.render('alertcustomer');
-});*/
+
 
 app.post('/alertcustomer',(req,res)=>{
     const accountSid = 'ACb6f4119fb55de4857897018d076c2c58';
@@ -435,10 +338,6 @@ app.get('/delete/:id', (req, res, next)=> {
     conn.query(usersql,(err,data)=>{
       if(err) throw err;
       var user=data[0].name;
-    /*  var usercart='INSERT INTO cart(u_name) values ("'+user+'")';
-      conn.query(usercart,(err,data)=>{
-        if(err) throw err;
-      }); */
         var s='SELECT i_name,price,quantity FROM cart where i_name=? and u_name=?';
         var add=[name,user];
         conn.query(s,add,(err,data)=>{
@@ -491,10 +390,6 @@ else{
           if(err) throw err;
         console.log(quantity);
         console.log(data[0].quantity);
-       // var newquantity=data[0].quantity+quantity;
-       // console.log(newquantity);
-      //  var changedquantity=newquantity-quantity;
-       // console.log(changedquantity);
        var sql='UPDATE cart set quantity =quantity+? where i_name="'+name+'" and u_name="'+user+'"';
         var insertitem=[quantity];
 
@@ -531,7 +426,7 @@ else{
       if(err) throw err;
      // console.log(data);
       res.render('cart',{productData:data});
-    })
+    });
   });
   });
 
@@ -606,5 +501,14 @@ app.get('/cart/delete/:name',(req,res)=>{
 });
   res.redirect('/cart');
 });
+/*
+app.get('/orders',(req,res)=>{
+  var sql='SELECT * FROM orders';
+  conn.query(sql,(error,data)=>{
+      if(error) throw error;
+      res.render('display', {title: 'Product list',productData:data});
 
+  });
+});
+*/
 app.listen(5000);
