@@ -14,8 +14,8 @@ var Strategy = require('passport-local').Strategy;
 
 const conn=mysql.createConnection({
     host:'localhost',
-    user: 'root',
-    password: 'sanjana123',
+    user: '',
+    password: '',
     database: 'Ecommercedb'
 });
 
@@ -305,14 +305,14 @@ app.get('/offers',(req,res)=>{
 
 
 app.post('/alertcustomer',(req,res)=>{
-    const accountSid = 'ACb6f4119fb55de4857897018d076c2c58';
-    const authToken = '62f07a0532bf3549cf03a38d3f26f472';
+    const accountSid = '';
+    const authToken = '';
     const client = twilio(accountSid, authToken);
     client.messages
       .create({
          body: "25% offer!",
-         from: '+12513049459',
-         to: '+918921791774'
+         from: '',
+         to: ''
        }).then(message => console.log(message.sid));
        res.redirect('/display');
 });
